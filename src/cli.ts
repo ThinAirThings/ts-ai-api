@@ -3,9 +3,9 @@ import { readFile, writeFile, mkdir } from 'fs/promises';
 import { glob } from 'glob';
 import path from 'path';
 import { createGenerator } from 'ts-json-schema-generator';
+import thing from './test.json'
 
-
-
+console.log(thing)
 program
     .name("ts-ai-json").version("0.0.1").description("Convert typescript files to json schema")
     .option("-d, --directory <projectDirectory>", "Path to the project directory")

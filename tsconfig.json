@@ -3,6 +3,7 @@
 		"outDir": "jsbin",
 		"module": "NodeNext",	// Output module format
 		"moduleResolution": "NodeNext",	// Input module format
+		"resolveJsonModule": true,
 		"esModuleInterop": true,
 		"target": "ES2021", // Node.js 16 flavor of js
 		"noUnusedLocals": false,
