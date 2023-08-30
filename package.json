@@ -1,7 +1,7 @@
 {
     "name": "@thinairthings/ts-ai-api",
     "author": "Dan Lannan",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "description": "",
     "type": "module",
     "bin": {
@@ -35,7 +35,8 @@
         "test": "node ./esbuild.mjs && node bin/cli.js"
     },
     "files": [
-        "bin", "dist"
+        "bin",
+        "dist"
     ],
     "repository": {
         "type": "git",
