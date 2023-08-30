@@ -15,17 +15,16 @@ program
         // Get list of ai files
         
         const aiApiDirectories = await glob(
-            path.join(path.resolve(options.directory??'.'), '**','*.aiApi')
+            path.join(path.resolve(options.directory??'.'), '**','*.ai')
         )
-        console.log(aiApiDirectories)
         aiApiDirectories.forEach(async (apiDirectory) => {
             const aiDirectoryObject = {
                 apiName: '',
                 description: '',
                 functions: {} as Record<string, object>
             }
-            aiDirectoryObject.apiName = path.basename(apiDirectory.replace('.aiApi', ''))
-            aiDirectoryObject.description = await readFile(path.join(apiDirectory, 'description.ai'), 'utf8')
+            aiDirectoryObject.apiName = path.basename(apiDirectory.replace('.ai', ''))
+            aiDirectoryObject.description = await readFile(path.join(apiDirectory, 'api-description.txt'), 'utf8')
             const aiFunctions = await glob(
                 path.join(apiDirectory, '**', '*.ai.ts')
             )

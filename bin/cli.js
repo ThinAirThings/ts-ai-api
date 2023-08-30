@@ -8,17 +8,16 @@ import path from "path";
 import { createGenerator } from "ts-json-schema-generator";
 program.name("ts-ai-json").version("0.0.1").description("Convert typescript files to json schema").option("-d, --directory <projectDirectory>", "Path to the project directory").option("-t, --tsconfig <tsconfig>", "Path to the tsconfig.json file").option("-o, --output <output>", "Path to the output file").action(async (options) => {
   const aiApiDirectories = await glob(
-    path.join(path.resolve(options.directory ?? "."), "**", "*.aiApi")
+    path.join(path.resolve(options.directory ?? "."), "**", "*.ai")
   );
-  console.log(aiApiDirectories);
   aiApiDirectories.forEach(async (apiDirectory) => {
     const aiDirectoryObject = {
       apiName: "",
       description: "",
       functions: {}
     };
-    aiDirectoryObject.apiName = path.basename(apiDirectory.replace(".aiApi", ""));
-    aiDirectoryObject.description = await readFile(path.join(apiDirectory, "description.ai"), "utf8");
+    aiDirectoryObject.apiName = path.basename(apiDirectory.replace(".ai", ""));
+    aiDirectoryObject.description = await readFile(path.join(apiDirectory, "api-description.txt"), "utf8");
     const aiFunctions = await glob(
       path.join(apiDirectory, "**", "*.ai.ts")
     );

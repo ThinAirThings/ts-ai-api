@@ -26,7 +26,7 @@
         "bin": "ts-ai-types",
         "dev": "node ./esbuild.mjs && node bin/cli.js",
         "build": "node ./esbuild.mjs",
-        "npmpub": "node ./esbuild.mjs && git add . && git commit -m \"mod\" && git push && npm version patch && npm publish --access public",
+        "npmpub": "node ./esbuild.mjs && git add . && git commit -m \"mod\" && git push && npm version patch && npm publish",
         "test": "node ./esbuild.mjs && node bin/cli.js"
     },
     "files": [
