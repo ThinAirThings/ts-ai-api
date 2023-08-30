@@ -9,7 +9,7 @@
     },
     "exports": {
         ".": {
-            "types": "./bin/cli.d.ts"
+            "types": "./dist/cli.d.ts"
         }
     },
     "dependencies": {
@@ -35,7 +35,7 @@
         "test": "node ./esbuild.mjs && node bin/cli.js"
     },
     "files": [
-        "bin"
+        "bin", "dist"
     ],
     "repository": {
         "type": "git",
