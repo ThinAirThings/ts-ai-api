@@ -8,7 +8,11 @@ import { createGenerator } from 'ts-json-schema-generator';
 export type AiApiJSON = {
     apiName: string,
     description: string,
-    functions: Record<string, object>
+    functions: Record<string, {
+        name: string,
+        description: string,
+        parameters: Record<string, any>
+    }>
 }
 
 program
@@ -26,7 +30,7 @@ program
             const aiDirectoryObject: AiApiJSON = {
                 apiName: '',
                 description: '',
-                functions: {} as Record<string, object>
+                functions: {} as Record<string, any>
             }
             aiDirectoryObject.apiName = path.basename(apiDirectory.replace('.ai', ''))
             aiDirectoryObject.description = await readFile(path.join(apiDirectory, 'api-description.txt'), 'utf8')
@@ -43,9 +47,20 @@ program
                     type Useless = string
                     const value = _value as {
                         type: "object",
-                        properties: Record<Useless, object> 
+                        properties: Record<Useless, {
+                            type: "object",
+                            properties: Record<string, any>
+                            description?: string
+                        }> 
                     }
-                    aiDirectoryObject.functions[key.match(/NamedParameters<typeof (.*?)>/)![1]] = Object.values(value.properties)[0]
+                    const functionJsonDeclaration = Object.values(value.properties)[0]
+                    const functionDescription = functionJsonDeclaration.description
+                    delete functionJsonDeclaration.description
+                    aiDirectoryObject.functions[key.match(/NamedParameters<typeof (.*?)>/)![1]] = {
+                        name: key.match(/NamedParameters<typeof (.*?)>/)![1],
+                        description: functionDescription??'',
+                        parameters: functionJsonDeclaration
+                    }
                 })
             })
             const outputDir = options.output 

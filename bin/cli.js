@@ -29,7 +29,14 @@ program.name("ts-ai-json").version("0.0.1").description("Convert typescript file
       }).createSchema("*");
       Object.entries(rawSchema.definitions).forEach(([key, _value]) => {
         const value = _value;
-        aiDirectoryObject.functions[key.match(/NamedParameters<typeof (.*?)>/)[1]] = Object.values(value.properties)[0];
+        const functionJsonDeclaration = Object.values(value.properties)[0];
+        const functionDescription = functionJsonDeclaration.description;
+        delete functionJsonDeclaration.description;
+        aiDirectoryObject.functions[key.match(/NamedParameters<typeof (.*?)>/)[1]] = {
+          name: key.match(/NamedParameters<typeof (.*?)>/)[1],
+          description: functionDescription ?? "",
+          parameters: functionJsonDeclaration
+        };
       });
     });
     const outputDir = options.output ? path.join(path.resolve("."), options.output) : apiDirectory;

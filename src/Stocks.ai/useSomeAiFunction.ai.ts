@@ -31,8 +31,9 @@ enum Api {
     weather = 'weather'
 }
 
+
 export const useSomeAiFunction = (
-/** This is a description for All Params.*/ {
+/** This is some function named cheeseburger */ {
     val1, val2
 }: {
     /** This is a description for Val1.*/
