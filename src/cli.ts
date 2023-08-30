@@ -4,6 +4,13 @@ import { glob } from 'glob';
 import path from 'path';
 import { createGenerator } from 'ts-json-schema-generator';
 
+
+export type AiApiJSON = {
+    apiName: string,
+    description: string,
+    functions: Record<string, object>
+}
+
 program
     .name("ts-ai-json").version("0.0.1").description("Convert typescript files to json schema")
     .option("-d, --directory <projectDirectory>", "Path to the project directory")
@@ -16,7 +23,7 @@ program
             path.join(path.resolve(options.directory??'.'), '**','*.ai')
         )
         aiApiDirectories.forEach(async (apiDirectory) => {
-            const aiDirectoryObject = {
+            const aiDirectoryObject: AiApiJSON = {
                 apiName: '',
                 description: '',
                 functions: {} as Record<string, object>
@@ -53,4 +60,6 @@ program
     })
 
 program.parse()
+
+
 

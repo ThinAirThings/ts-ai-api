@@ -7,6 +7,11 @@
     "bin": {
         "ts-ai-api": "./bin/cli.js"
     },
+    "exports": {
+        ".": {
+            "types": "./bin/cli.d.ts"
+        }
+    },
     "dependencies": {
         "@commander-js/extra-typings": "^11.0.0",
         "glob": "^10.3.3",
@@ -25,7 +30,7 @@
     "scripts": {
         "bin": "ts-ai-types",
         "dev": "node ./esbuild.mjs && node bin/cli.js",
-        "build": "node ./esbuild.mjs",
+        "build": "node ./esbuild.mjs && tsc --emitDeclarationOnly",
         "npmpub": "node ./esbuild.mjs && git add . && git commit -m \"mod\" && git push && npm version patch && npm publish",
         "test": "node ./esbuild.mjs && node bin/cli.js"
     },
