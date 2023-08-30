@@ -4,13 +4,12 @@
     "version": "1.0.7",
     "description": "",
     "type": "module",
+    "types": "dist/cli.d.ts",
     "bin": {
         "ts-ai-api": "./bin/cli.js"
     },
     "exports": {
-        ".": {
-            "types": "./dist/cli.d.ts"
-        }
+        "types": "./dist/cli.d.ts"
     },
     "dependencies": {
         "@commander-js/extra-typings": "^11.0.0",
@@ -29,9 +28,9 @@
     },
     "scripts": {
         "bin": "ts-ai-types",
-        "dev": "node ./esbuild.mjs && node bin/cli.js",
+        "dev": "npm run build && node bin/cli.js",
         "build": "node ./esbuild.mjs && tsc --emitDeclarationOnly",
-        "npmpub": "node ./esbuild.mjs && git add . && git commit -m \"mod\" && git push && npm version patch && npm publish",
+        "npmpub": "npm run build && git add . && git commit -m \"mod\" && git push && npm version patch && npm publish",
         "test": "node ./esbuild.mjs && node bin/cli.js"
     },
     "files": [
