@@ -1,0 +1,43 @@
+{
+    "name": "@thinairthings/ts-ai-api",
+    "author": "Dan Lannan",
+    "version": "1.0.0",
+    "description": "",
+    "type": "module",
+    "bin": {
+        "ts-ai-api": "./bin/cli.js"
+    },
+    "dependencies": {
+        "@commander-js/extra-typings": "^11.0.0",
+        "glob": "^10.3.3",
+        "ts-json-schema-generator": "^1.3.0"
+    },
+    "devDependencies": {
+        "@types/glob": "^8.1.0",
+        "@types/react": "^18.0.32",
+        "esbuild": "^0.19.2",
+        "tslib": "^2.6.1",
+        "typescript": "^5.1.6"
+    },
+    "peerDependencies": {
+        "react": "^18.2.0"
+    },
+    "scripts": {
+        "bin": "ts-ai-types",
+        "dev": "node ./esbuild.mjs && node bin/cli.js",
+        "build": "node ./esbuild.mjs",
+        "npmpub": "node ./esbuild.mjs && git add . && git commit -m \"mod\" && git push && npm version patch && npm publish --access public",
+        "test": "node ./esbuild.mjs && node bin/cli.js"
+    },
+    "files": [
+        "bin"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ThinAirThings/ts-ai-api.git"
+    },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com/",
+        "access": "restricted"
+    }
+}
