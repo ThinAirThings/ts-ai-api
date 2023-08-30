@@ -1,0 +1,72 @@
+{
+    "apiName": "Stocks",
+    "description": "This is an API with functions which can receive data about financial stocks from the Polygon.io api",
+    "functions": {
+        "useSomeOtherAiFunction": {
+            "type": "object",
+            "properties": {
+                "thing1": {
+                    "type": "object",
+                    "properties": {
+                        "duh1": {
+                            "type": "string"
+                        },
+                        "duh2": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "duh1",
+                        "duh2"
+                    ],
+                    "additionalProperties": false
+                },
+                "thing2": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "thing1",
+                "thing2"
+            ],
+            "additionalProperties": false
+        },
+        "useSomeAiFunction": {
+            "type": "object",
+            "properties": {
+                "val1": {
+                    "type": "object",
+                    "properties": {
+                        "obj1": {
+                            "type": "string",
+                            "enum": [
+                                "stocks",
+                                "charts",
+                                "weather"
+                            ],
+                            "description": "This is the set of options for the object."
+                        },
+                        "obj2": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "obj1",
+                        "obj2"
+                    ],
+                    "additionalProperties": false,
+                    "description": "This is a description for Val1."
+                },
+                "val2": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "val1",
+                "val2"
+            ],
+            "additionalProperties": false,
+            "description": "This is a description for All Params."
+        }
+    }
+}

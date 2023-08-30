@@ -3,9 +3,7 @@ import { readFile, writeFile, mkdir } from 'fs/promises';
 import { glob } from 'glob';
 import path from 'path';
 import { createGenerator } from 'ts-json-schema-generator';
-import thing from './test.json'
 
-console.log(thing)
 program
     .name("ts-ai-json").version("0.0.1").description("Convert typescript files to json schema")
     .option("-d, --directory <projectDirectory>", "Path to the project directory")
@@ -43,7 +41,9 @@ program
                     aiDirectoryObject.functions[key.match(/NamedParameters<typeof (.*?)>/)![1]] = Object.values(value.properties)[0]
                 })
             })
-            const outputDir = path.join(path.resolve('.'), options.output??'dist', 'aiApis')
+            const outputDir = options.output 
+                ? path.join(path.resolve('.'), options.output)
+                : apiDirectory
             await mkdir(outputDir, { recursive: true })
             await writeFile(
                 path.join(outputDir, `${aiDirectoryObject.apiName}.json`), 
