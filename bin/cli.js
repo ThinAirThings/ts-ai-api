@@ -64,10 +64,6 @@ program.command("generate-interfaces").option("-d, --directory <projectDirectory
         tsconfig: path.join(path.resolve("."), "tsconfig.json"),
         type: "*"
       }).createSchema("*");
-      await writeFile(
-        path.join(apiDirectory, `${path.basename(aiFunction)}-raw.json`),
-        JSON.stringify(functionSchema, null, 4)
-      );
       const functionJson = {};
       const functionName = Object.entries(functionSchema.definitions).filter(([key]) => key.includes("NamedParameters")).map(([key]) => key.match(/NamedParameters<typeof (.*?)>/)[1])[0];
       const functionDescription = Object.entries(functionSchema.definitions).filter(([key]) => key.includes("NamedParameters")).map(([_namedParamKey, value]) => {

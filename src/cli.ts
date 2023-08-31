@@ -96,10 +96,6 @@ program
                     tsconfig: path.join(path.resolve('.'), 'tsconfig.json'),
                     type: '*',
                 }).createSchema('*')
-                await writeFile( 
-                    path.join(apiDirectory, `${path.basename(aiFunction)}-raw.json`), 
-                    JSON.stringify(functionSchema, null, 4)
-                )
                 // Create Function JSon structure
                 const functionJson: {
                     name: string
