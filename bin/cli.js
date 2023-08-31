@@ -52,7 +52,7 @@ program.command("create-api").option("-d, --directory <projectDirectory>", "Path
 });
 program.command("generate-interfaces").option("-d, --directory <projectDirectory>", "Path to the project directory").option("-o, --output <output>", "Path to the output file").action(async (options) => {
   const aiApiDirectories = await glob(
-    path.join(path.resolve(options.directory ?? "."), "**", "*.ai?(.api)")
+    path.join(path.resolve(options.directory ?? "."), "**", "*.ai")
   );
   aiApiDirectories.forEach(async (apiDirectory) => {
     const aiFunctions = await glob([
