@@ -10,8 +10,7 @@ export type _Input =
 /**This is ALSO description */
 export const useVertexFilterFunctions = (
 /**This is a description */
-inputEdge: Edge<{
-    
+inputEdge: Edge<{ 
     rawInput: string
 }>) => {
     const [filteredFunctionsEdge] = useVertex(async ([{rawInput}]) => {

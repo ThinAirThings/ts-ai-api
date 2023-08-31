@@ -55,13 +55,6 @@ program.command("generate-interfaces").option("-d, --directory <projectDirectory
     path.join(path.resolve(options.directory ?? "."), "**", "*.ai")
   );
   aiApiDirectories.forEach(async (apiDirectory) => {
-    const aiDirectoryObject = {
-      apiName: "",
-      description: "",
-      functions: {}
-    };
-    aiDirectoryObject.apiName = path.basename(apiDirectory.replace(".ai", ""));
-    aiDirectoryObject.description = await readFile(path.join(apiDirectory, "api-description.txt"), "utf8");
     const aiFunctions = await glob([
       path.join(apiDirectory, "**", "*.ai.ts")
     ]);
