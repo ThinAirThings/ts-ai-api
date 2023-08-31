@@ -62,7 +62,8 @@ program.command("generate-interfaces").option("-d, --directory <projectDirectory
       const functionSchema = createGenerator({
         path: aiFunction,
         tsconfig: path.join(path.resolve("."), "tsconfig.json"),
-        type: "*"
+        type: "*",
+        skipTypeCheck: true
       }).createSchema("*");
       const functionJson = {};
       const functionName = Object.entries(functionSchema.definitions).filter(([key]) => key.includes("NamedParameters")).map(([key]) => key.match(/NamedParameters<typeof (.*?)>/)[1])[0];

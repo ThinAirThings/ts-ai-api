@@ -95,6 +95,7 @@ program
                     path: aiFunction,
                     tsconfig: path.join(path.resolve('.'), 'tsconfig.json'),
                     type: '*',
+                    skipTypeCheck: true
                 }).createSchema('*')
                 // Create Function JSon structure
                 const functionJson: {
