@@ -1,7 +1,7 @@
 {
     "name": "@thinairthings/ts-ai-api",
     "author": "Dan Lannan",
-    "version": "1.0.14",
+    "version": "1.0.15",
     "description": "",
     "type": "module",
     "types": "dist/cli.d.ts",
