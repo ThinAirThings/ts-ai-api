@@ -84,7 +84,7 @@ program
     .action(async (options) => {
         // Get list of ai files 
         const aiApiDirectories = await glob(
-            path.join(path.resolve(options.directory??'.'), '**','*.ai')
+            path.join(path.resolve(options.directory??'.'), '**','*.ai?(.api)')
         )
         aiApiDirectories.forEach(async (apiDirectory) => {
             const aiFunctions = await glob([
