@@ -1,15 +1,16 @@
-declare enum Api {
-    stocks = "stocks",
-    charts = "charts",
-    weather = "weather"
-}
-export declare const useSomeAiFunction: ({ val1, val2 }: {
-    /** This is a description for Val1.*/
-    val1: {
-        /** This is the set of options for the object. */
-        obj1: Api;
-        obj2: number;
-    };
-    val2: number;
-}) => void;
-export {};
+import { Edge } from "@thinairthings/react-nodegraph";
+export type _Input = 
+/** This is the function description */
+{
+    /** This is the raw Input Descriptiuon */
+    rawInput: string;
+};
+/**This is ALSO description */
+export declare const useVertexFilterFunctions: (inputEdge: Edge<{
+    rawInput: string;
+}>) => Edge<{
+    filteredFunctions: number;
+}>;
+export type _Output = {
+    filteredFunctions: number;
+};

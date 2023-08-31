@@ -1,0 +1,29 @@
+{
+    "name": "useVertexFilterFunctions",
+    "description": "This is a description",
+    "input": {
+        "type": "object",
+        "properties": {
+            "rawInput": {
+                "type": "string",
+                "description": "This is the raw Input Descriptiuon"
+            }
+        },
+        "required": [
+            "rawInput"
+        ],
+        "additionalProperties": false
+    },
+    "output": {
+        "type": "object",
+        "properties": {
+            "filteredFunctions": {
+                "type": "number"
+            }
+        },
+        "required": [
+            "filteredFunctions"
+        ],
+        "additionalProperties": false
+    }
+}
