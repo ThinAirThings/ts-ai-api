@@ -80,7 +80,7 @@ program.command("generate-interfaces").option("-d, --directory <projectDirectory
         }
       });
       await writeFile(
-        path.join(apiDirectory, `${functionName}.ai.json`),
+        path.join(path.dirname(aiFunction), `${functionName}.ai.json`),
         JSON.stringify(functionJson, null, 4)
       );
     });
