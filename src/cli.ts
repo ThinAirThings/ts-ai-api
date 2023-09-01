@@ -1,8 +1,11 @@
+#!/bin/env node
 import {program} from '@commander-js/extra-typings';
 import { readFile, writeFile, mkdir } from 'fs/promises';
 import { glob } from 'glob';
 import path from 'path';
 import { createGenerator } from 'ts-json-schema-generator';
+import { getFunctionParameters} from './Test/getFunctionParameters.js';
+import { useVertexFilterFunctions } from './type-index.js';
 
 export type AiApiJSON = {
     apiName: string,
@@ -130,6 +133,13 @@ program
                 )
             })
         })
+    })
+
+program
+    .command("test")
+    .action(async () => {
+       const params = await getFunctionParameters(useVertexFilterFunctions)
+       console.log(JSON.stringify(params))
     })
 program.parse()
 

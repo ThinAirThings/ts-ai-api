@@ -26,3 +26,20 @@ export type _Output = {
 }
 
 
+const fn = (params: {
+    thing1: string
+    thing2: number
+}): number => {
+    return 5
+}
+
+const someTSCWrapperFunction = (fn: Function) => {
+    return {
+        params: {
+            thing1: 'string',
+            thing2: 'number'
+        }
+    }
+}
+
+const targetOutput = someTSCWrapperFunction(fn)

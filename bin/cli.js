@@ -1,15 +1,74 @@
-#!/usr/bin/env node
+#!/bin/env node
+
+// node_modules/tsup/assets/esm_shims.js
+import { fileURLToPath } from "url";
+import path from "path";
+var getFilename = () => fileURLToPath(import.meta.url);
+var getDirname = () => path.dirname(getFilename());
+var __dirname = /* @__PURE__ */ getDirname();
 
 // src/cli.ts
 import { program } from "@commander-js/extra-typings";
 import { readFile, writeFile, mkdir } from "fs/promises";
 import { glob } from "glob";
-import path from "path";
+import path3 from "path";
+import { createGenerator as createGenerator2 } from "ts-json-schema-generator";
+
+// src/Test/getFunctionParameters.ts
+import { Project } from "ts-morph";
+import path2 from "path";
 import { createGenerator } from "ts-json-schema-generator";
+var getFunctionParameters = async (fn) => {
+  const project = new Project();
+  const sourceFile = project.addSourceFileAtPath(path2.resolve(__dirname, "./type-index.d.ts"));
+  const variableDeclarationNode = sourceFile.getVariableDeclarationOrThrow(fn.name);
+  const variableStatementNode = variableDeclarationNode.getParentOrThrow().getParentOrThrow();
+  const description = variableStatementNode.getJsDocs()[0]?.getComment() ?? `${fn.name}`;
+  const functionTypeNode = variableDeclarationNode.getTypeNodeOrThrow();
+  const params = functionTypeNode.getParameters()[0].getType().getProperties()[0].getValueDeclaration()?.getType();
+  const returnType = functionTypeNode.getReturnType();
+  sourceFile.addTypeAliases([{
+    name: `${fn.name}Params`,
+    type: params?.getText(),
+    isExported: true
+  }, {
+    name: `${fn.name}ReturnType`,
+    type: returnType.getText(),
+    isExported: true
+  }]).forEach((typeAlias, index) => {
+  });
+  await sourceFile.save();
+  const schema = createGenerator({
+    path: path2.resolve(__dirname, "./type-index.d.ts"),
+    tsconfig: path2.resolve(__dirname, "../tsconfig.json"),
+    type: `${fn.name}Params`
+  }).createSchema(`${fn.name}Params`);
+  return {
+    name: fn.name,
+    description,
+    parameters: schema.definitions[`${fn.name}Params`]
+  };
+};
+
+// src/Test/useVertexFilterFunctions.ts
+import { useVertex } from "@thinairthings/react-nodegraph";
+var useVertexFilterFunctions = (params) => {
+  const [filteredFunctionsEdge] = useVertex(async ([]) => {
+    return {
+      filteredFunctions: 5
+    };
+  }, []);
+  return {
+    data1: "fdsfas",
+    data2: 5
+  };
+};
+
+// src/cli.ts
 program.name("ts-ai-api").version("0.0.1").description("Convert typescript files to json schema");
 program.command("create-api").option("-d, --directory <projectDirectory>", "Path to the project directory").option("-t, --tsconfig <tsconfig>", "Path to the tsconfig.json file").option("-o, --output <output>", "Path to the output file").action(async (options) => {
   const aiApiDirectories = await glob(
-    path.join(path.resolve(options.directory ?? "."), "**", "*.ai")
+    path3.join(path3.resolve(options.directory ?? "."), "**", "*.ai")
   );
   aiApiDirectories.forEach(async (apiDirectory) => {
     const aiDirectoryObject = {
@@ -17,19 +76,19 @@ program.command("create-api").option("-d, --directory <projectDirectory>", "Path
       description: "",
       functions: {}
     };
-    aiDirectoryObject.apiName = path.basename(apiDirectory.replace(".ai", ""));
-    aiDirectoryObject.description = await readFile(path.join(apiDirectory, "api-description.txt"), "utf8");
+    aiDirectoryObject.apiName = path3.basename(apiDirectory.replace(".ai", ""));
+    aiDirectoryObject.description = await readFile(path3.join(apiDirectory, "api-description.txt"), "utf8");
     const aiFunctions = await glob([
-      path.join(apiDirectory, "**", "*.ai.ts"),
-      path.join(apiDirectory, "**", "*.ai.tsx")
+      path3.join(apiDirectory, "**", "*.ai.ts"),
+      path3.join(apiDirectory, "**", "*.ai.tsx")
     ]);
     aiFunctions.forEach(async (aiFunction) => {
-      const rawSchema = createGenerator({
+      const rawSchema = createGenerator2({
         path: aiFunction,
-        tsconfig: options.tsconfig ?? path.join(path.resolve("."), "tsconfig.json"),
+        tsconfig: options.tsconfig ?? path3.join(path3.resolve("."), "tsconfig.json"),
         type: "*"
       }).createSchema("*");
-      await writeFile(path.join(apiDirectory, `${path.basename(aiFunction)}-raw.json`), JSON.stringify(rawSchema, null, 4));
+      await writeFile(path3.join(apiDirectory, `${path3.basename(aiFunction)}-raw.json`), JSON.stringify(rawSchema, null, 4));
       Object.entries(rawSchema.definitions).forEach(([key, _value]) => {
         const value = _value;
         const functionJsonDeclaration = Object.values(value.properties)[0];
@@ -42,26 +101,26 @@ program.command("create-api").option("-d, --directory <projectDirectory>", "Path
         };
       });
     });
-    const outputDir = options.output ? path.join(path.resolve("."), options.output) : apiDirectory;
+    const outputDir = options.output ? path3.join(path3.resolve("."), options.output) : apiDirectory;
     await mkdir(outputDir, { recursive: true });
     await writeFile(
-      path.join(outputDir, `${aiDirectoryObject.apiName}.json`),
+      path3.join(outputDir, `${aiDirectoryObject.apiName}.json`),
       JSON.stringify(aiDirectoryObject, null, 4)
     );
   });
 });
 program.command("generate-interfaces").option("-d, --directory <projectDirectory>", "Path to the project directory").option("-o, --output <output>", "Path to the output file").action(async (options) => {
   const aiApiDirectories = await glob(
-    path.join(path.resolve(options.directory ?? "."), "**", "*.ai?(.api)")
+    path3.join(path3.resolve(options.directory ?? "."), "**", "*.ai?(.api)")
   );
   aiApiDirectories.forEach(async (apiDirectory) => {
     const aiFunctions = await glob([
-      path.join(apiDirectory, "**", "*.ai.ts")
+      path3.join(apiDirectory, "**", "*.ai.ts")
     ]);
     aiFunctions.forEach(async (aiFunction) => {
-      const functionSchema = createGenerator({
+      const functionSchema = createGenerator2({
         path: aiFunction,
-        tsconfig: path.join(path.resolve("."), "tsconfig.json"),
+        tsconfig: path3.join(path3.resolve("."), "tsconfig.json"),
         type: "*",
         skipTypeCheck: true
       }).createSchema("*");
@@ -80,10 +139,14 @@ program.command("generate-interfaces").option("-d, --directory <projectDirectory
         }
       });
       await writeFile(
-        path.join(path.dirname(aiFunction), `${functionName}.ai.json`),
+        path3.join(path3.dirname(aiFunction), `${functionName}.ai.json`),
         JSON.stringify(functionJson, null, 4)
       );
     });
   });
+});
+program.command("test").action(async () => {
+  const params = await getFunctionParameters(useVertexFilterFunctions);
+  console.log(JSON.stringify(params));
 });
 program.parse();
