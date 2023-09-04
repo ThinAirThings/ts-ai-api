@@ -9,7 +9,9 @@
         "ts-ai-api": "./bin/cli.js"
     },
     "exports": {
-        "types": "./dist/cli.d.ts"
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.js",
+        "require": "./dist/index.cjs"
     },
     "dependencies": {
         "@commander-js/extra-typings": "^11.0.0",
@@ -33,7 +35,7 @@
     "scripts": {
         "bin": "ts-ai-types",
         "build": "tsup-node",
-        "dev": "tsup-node && node ./bin/cli.js",
+        "dev": "tsup-node --config tsup.dev.config.ts && node ./bin/cli.js",
         "npmpub": "npm run build && git add . && git commit -m \"mod\" && git push && npm version patch && npm publish"
     },
     "files": [

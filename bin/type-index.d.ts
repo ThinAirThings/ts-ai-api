@@ -1,4 +1,4 @@
-declare const getFunctionParameters: (fn: Function) => Promise<{
+declare const jsonInputStructureFromFunction: (fn: Function) => Promise<{
     name: string;
     description: string;
     parameters: Record<string, any>;
@@ -12,9 +12,15 @@ declare enum Options {
 /** Function Description */
 declare const useVertexFilterFunctions: (params: {
     rawInput: {
-        /**This is also a param description */
+        /** Param Description 1 */
         thing1: Options;
-        thing2: number;
+        /** Param Description 2 */
+        thing2: {
+            /** Data Description 1 */
+            data1: string;
+            /** Data Description 2 */
+            data2: number;
+        };
     };
 }) => {
     data1: string;
@@ -29,4 +35,47 @@ declare const fnArrowTest: (params: {
     thing2: number;
 }) => number;
 
-export { fnArrowTest, fnNormalTest, getFunctionParameters, useVertexFilterFunctions };
+export { fnArrowTest, fnNormalTest, jsonInputStructureFromFunction, useVertexFilterFunctions };
+
+export type useVertexFilterFunctionsParams = { /** */
+    /**
+     * Param Description 1
+     */
+    /** */
+    /**
+     * Data Description 1
+     */
+    /** */
+    /**
+     * Data Description 2
+     */
+    rawInput: { /** */
+        /**
+         * Param Description 1
+         */
+        thing1: Options; /** */
+        /**
+         * Data Description 1
+         */
+        /** */
+        /**
+         * Data Description 2
+         */
+        thing2: { /** */
+            /**
+             * Data Description 1
+             */
+            data1: string; /** */
+            /**
+             * Data Description 2
+             */
+            data2: number; }; }; };
+export type useVertexFilterFunctionsReturnType = { /** */
+    /**
+     * Data Description 1
+     */
+    data1: string; /** */
+    /**
+     * Data Description 2
+     */
+    data2: number; };

@@ -1,1 +1,0 @@
-This is an API with functions which can receive data about financial stocks from the Polygon.io api

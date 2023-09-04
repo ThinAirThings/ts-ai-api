@@ -9,9 +9,15 @@ enum Options {
 /** Function Description */
 export const useVertexFilterFunctions = (params: { 
     rawInput: {
-        /**This is also a param description */
+        /** Param Description 1 */
         thing1: Options
-        thing2: number
+        /** Param Description 2 */
+        thing2: {
+            /** Data Description 1 */
+            data1: string
+            /** Data Description 2 */
+            data2: number
+        }
     }
 }): {
     data1: string

@@ -1,12 +1,10 @@
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
-    entry: ['src/cli.ts'],
-    outDir: 'bin',
+    entry: ['src/index.ts'],
+    outDir: 'dist',
     clean: true,
     shims: true,
-    dts: {
-        entry: 'src/type-index.ts',
-    },
-    format: ['esm'],
+    dts: true,
+    format: ['esm', 'cjs'],
 })

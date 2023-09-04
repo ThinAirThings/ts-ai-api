@@ -1,12 +1,12 @@
-import {FunctionTypeNode, Project, VariableStatement} from 'ts-morph'
+import {FunctionTypeNode, Node, Project, SyntaxKind, Type, TypeLiteralNode, VariableStatement} from 'ts-morph'
 import path from "path";
-import { createGenerator } from 'ts-json-schema-generator';
+import { createGenerator, ts } from 'ts-json-schema-generator';
 
 
 
 // Note: This is currently slow. But it works.
 // You need to add in the ability to use parameter descriptions
-export const getFunctionParameters = async (fn: Function): Promise<{
+export const jsonInputStructureFromFunction = async (fn: Function): Promise<{
     name: string,
     description: string,
     parameters: Record<string, any>
@@ -23,18 +23,47 @@ export const getFunctionParameters = async (fn: Function): Promise<{
     // Get function type node
     const functionTypeNode = variableDeclarationNode
         .getTypeNodeOrThrow() as FunctionTypeNode
-    const params = functionTypeNode.getParameters()[0].getType().getProperties()[0].getValueDeclaration()?.getType()
+    const inputObject = functionTypeNode.getParameters()[0]
+
+    // Return Type
     const returnType = functionTypeNode.getReturnType()
     sourceFile.addTypeAliases([{
         name: `${fn.name}Params`,
-        type: params?.getText()!,
+        type: inputObject.getType().getText()!,
         isExported: true
     }, {
         name: `${fn.name}ReturnType`,
         type: returnType.getText()!,
         isExported: true
-    }]).forEach((typeAlias, index) => {
-        // YOURE HERE. Need to figure out how to add parameter descriptions
+    }]).forEach((typeAlias) => {
+        const nodeMatchVisitor = (aliasNode: Node<ts.Node>, matchNode: Node<ts.Node>) => {
+            if (aliasNode.getKindName()==="PropertySignature" && aliasNode.getText().includes(matchNode.getText())) {
+                // @ts-ignore
+                aliasNode.addJsDoc({
+                    description: ``
+                })
+                // @ts-ignore
+                aliasNode.addJsDoc({
+                    //@ts-ignore
+                    description: `\n${matchNode.getJsDocs()[0]?.getComment()}`
+                })
+            }
+            aliasNode.forEachChild(aliasNodeChild => {
+                nodeMatchVisitor(aliasNodeChild, matchNode)
+            })
+        }
+        const visitor = (node: Node<ts.Node>)  => {
+            //@ts-ignore
+            if (node.getKindName() === "PropertySignature" && (node.getJsDocs()[0]?.getComment())) {
+                typeAlias.forEachChild((aliasNode) => {
+                    nodeMatchVisitor(aliasNode, node)
+                })
+            }
+            node.forEachChild(visitor)
+        }
+        inputObject.forEachChild((node) => {
+            visitor(node)
+        })
     })
     await sourceFile.save()
     const schema = createGenerator({

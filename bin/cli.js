@@ -14,28 +14,54 @@ import { glob } from "glob";
 import path3 from "path";
 import { createGenerator as createGenerator2 } from "ts-json-schema-generator";
 
-// src/Test/getFunctionParameters.ts
+// src/src/jsonInputStructureFromFunction.ts
 import { Project } from "ts-morph";
 import path2 from "path";
 import { createGenerator } from "ts-json-schema-generator";
-var getFunctionParameters = async (fn) => {
+var jsonInputStructureFromFunction = async (fn) => {
   const project = new Project();
   const sourceFile = project.addSourceFileAtPath(path2.resolve(__dirname, "./type-index.d.ts"));
   const variableDeclarationNode = sourceFile.getVariableDeclarationOrThrow(fn.name);
   const variableStatementNode = variableDeclarationNode.getParentOrThrow().getParentOrThrow();
   const description = variableStatementNode.getJsDocs()[0]?.getComment() ?? `${fn.name}`;
   const functionTypeNode = variableDeclarationNode.getTypeNodeOrThrow();
-  const params = functionTypeNode.getParameters()[0].getType().getProperties()[0].getValueDeclaration()?.getType();
+  const inputObject = functionTypeNode.getParameters()[0];
   const returnType = functionTypeNode.getReturnType();
   sourceFile.addTypeAliases([{
     name: `${fn.name}Params`,
-    type: params?.getText(),
+    type: inputObject.getType().getText(),
     isExported: true
   }, {
     name: `${fn.name}ReturnType`,
     type: returnType.getText(),
     isExported: true
-  }]).forEach((typeAlias, index) => {
+  }]).forEach((typeAlias) => {
+    const nodeMatchVisitor = (aliasNode, matchNode) => {
+      if (aliasNode.getKindName() === "PropertySignature" && aliasNode.getText().includes(matchNode.getText())) {
+        aliasNode.addJsDoc({
+          description: ``
+        });
+        aliasNode.addJsDoc({
+          //@ts-ignore
+          description: `
+${matchNode.getJsDocs()[0]?.getComment()}`
+        });
+      }
+      aliasNode.forEachChild((aliasNodeChild) => {
+        nodeMatchVisitor(aliasNodeChild, matchNode);
+      });
+    };
+    const visitor = (node) => {
+      if (node.getKindName() === "PropertySignature" && node.getJsDocs()[0]?.getComment()) {
+        typeAlias.forEachChild((aliasNode) => {
+          nodeMatchVisitor(aliasNode, node);
+        });
+      }
+      node.forEachChild(visitor);
+    };
+    inputObject.forEachChild((node) => {
+      visitor(node);
+    });
   });
   await sourceFile.save();
   const schema = createGenerator({
@@ -50,7 +76,7 @@ var getFunctionParameters = async (fn) => {
   };
 };
 
-// src/Test/useVertexFilterFunctions.ts
+// src/src/useVertexFilterFunctions.ts
 import { useVertex } from "@thinairthings/react-nodegraph";
 var useVertexFilterFunctions = (params) => {
   const [filteredFunctionsEdge] = useVertex(async ([]) => {
@@ -146,7 +172,7 @@ program.command("generate-interfaces").option("-d, --directory <projectDirectory
   });
 });
 program.command("test").action(async () => {
-  const params = await getFunctionParameters(useVertexFilterFunctions);
+  const params = await jsonInputStructureFromFunction(useVertexFilterFunctions);
   console.log(JSON.stringify(params));
 });
 program.parse();
