@@ -1,10 +1,17 @@
-// src/src/jsonInputStructureFromFunction.ts
-import { Project } from "ts-morph";
+// node_modules/tsup/assets/esm_shims.js
+import { fileURLToPath } from "url";
 import path from "path";
+var getFilename = () => fileURLToPath(import.meta.url);
+var getDirname = () => path.dirname(getFilename());
+var __dirname = /* @__PURE__ */ getDirname();
+
+// src/src/jsonStructureFromFunction.ts
+import { Project } from "ts-morph";
+import path2 from "path";
 import { createGenerator } from "ts-json-schema-generator";
-var jsonInputStructureFromFunction = async (fn) => {
+var jsonStructureFromFunction = async (fn) => {
   const project = new Project();
-  const sourceFile = project.addSourceFileAtPath(path.resolve(process.cwd(), "bin", "type-index.d.ts"));
+  const sourceFile = project.addSourceFileAtPath(path2.resolve(process.cwd(), "bin", "type-index.d.ts"));
   const variableDeclarationNode = sourceFile.getVariableDeclarationOrThrow(fn.name);
   const variableStatementNode = variableDeclarationNode.getParentOrThrow().getParentOrThrow();
   const description = variableStatementNode.getJsDocs()[0]?.getComment() ?? `${fn.name}`;
@@ -12,11 +19,11 @@ var jsonInputStructureFromFunction = async (fn) => {
   const inputObject = functionTypeNode.getParameters()[0];
   const returnType = functionTypeNode.getReturnType();
   sourceFile.addTypeAliases([{
-    name: `${fn.name}Params`,
+    name: `${fn.name}_Input`,
     type: inputObject.getType().getText(),
     isExported: true
   }, {
-    name: `${fn.name}ReturnType`,
+    name: `${fn.name}_Output`,
     type: returnType.getText(),
     isExported: true
   }]).forEach((typeAlias) => {
@@ -48,18 +55,23 @@ ${matchNode.getJsDocs()[0]?.getComment()}`
     });
   });
   await sourceFile.save();
-  const schema = createGenerator({
-    path: path.resolve(process.cwd(), "bin", "type-index.d.ts"),
-    // tsconfig: path.resolve(__dirname, '../tsconfig.json'),
-    type: `${fn.name}*`
-  }).createSchema(`${fn.name}*`);
-  console.log(JSON.stringify(schema, null, 4));
+  const inputSchema = createGenerator({
+    path: path2.resolve(process.cwd(), "bin", "type-index.d.ts"),
+    tsconfig: path2.resolve(__dirname, "../tsconfig.json"),
+    type: `${fn.name}_Input`
+  }).createSchema(`${fn.name}_Input`);
+  const outputSchema = createGenerator({
+    path: path2.resolve(process.cwd(), "bin", "type-index.d.ts"),
+    tsconfig: path2.resolve(__dirname, "../tsconfig.json"),
+    type: `${fn.name}_Output`
+  }).createSchema(`${fn.name}_Output`);
   return {
     name: fn.name,
     description,
-    parameters: schema.definitions[`${fn.name}Params`]
+    input: inputSchema.definitions[`${fn.name}_Input`],
+    output: outputSchema.definitions[`${fn.name}_Output`]
   };
 };
 export {
-  jsonInputStructureFromFunction
+  jsonStructureFromFunction
 };

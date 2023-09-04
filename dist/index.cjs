@@ -30,15 +30,15 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/index.ts
 var src_exports = {};
 __export(src_exports, {
-  jsonInputStructureFromFunction: () => jsonInputStructureFromFunction
+  jsonStructureFromFunction: () => jsonStructureFromFunction
 });
 module.exports = __toCommonJS(src_exports);
 
-// src/src/jsonInputStructureFromFunction.ts
+// src/src/jsonStructureFromFunction.ts
 var import_ts_morph = require("ts-morph");
 var import_path = __toESM(require("path"), 1);
 var import_ts_json_schema_generator = require("ts-json-schema-generator");
-var jsonInputStructureFromFunction = async (fn) => {
+var jsonStructureFromFunction = async (fn) => {
   const project = new import_ts_morph.Project();
   const sourceFile = project.addSourceFileAtPath(import_path.default.resolve(process.cwd(), "bin", "type-index.d.ts"));
   const variableDeclarationNode = sourceFile.getVariableDeclarationOrThrow(fn.name);
@@ -48,11 +48,11 @@ var jsonInputStructureFromFunction = async (fn) => {
   const inputObject = functionTypeNode.getParameters()[0];
   const returnType = functionTypeNode.getReturnType();
   sourceFile.addTypeAliases([{
-    name: `${fn.name}Params`,
+    name: `${fn.name}_Input`,
     type: inputObject.getType().getText(),
     isExported: true
   }, {
-    name: `${fn.name}ReturnType`,
+    name: `${fn.name}_Output`,
     type: returnType.getText(),
     isExported: true
   }]).forEach((typeAlias) => {
@@ -84,19 +84,24 @@ ${matchNode.getJsDocs()[0]?.getComment()}`
     });
   });
   await sourceFile.save();
-  const schema = (0, import_ts_json_schema_generator.createGenerator)({
+  const inputSchema = (0, import_ts_json_schema_generator.createGenerator)({
     path: import_path.default.resolve(process.cwd(), "bin", "type-index.d.ts"),
-    // tsconfig: path.resolve(__dirname, '../tsconfig.json'),
-    type: `${fn.name}*`
-  }).createSchema(`${fn.name}*`);
-  console.log(JSON.stringify(schema, null, 4));
+    tsconfig: import_path.default.resolve(__dirname, "../tsconfig.json"),
+    type: `${fn.name}_Input`
+  }).createSchema(`${fn.name}_Input`);
+  const outputSchema = (0, import_ts_json_schema_generator.createGenerator)({
+    path: import_path.default.resolve(process.cwd(), "bin", "type-index.d.ts"),
+    tsconfig: import_path.default.resolve(__dirname, "../tsconfig.json"),
+    type: `${fn.name}_Output`
+  }).createSchema(`${fn.name}_Output`);
   return {
     name: fn.name,
     description,
-    parameters: schema.definitions[`${fn.name}Params`]
+    input: inputSchema.definitions[`${fn.name}_Input`],
+    output: outputSchema.definitions[`${fn.name}_Output`]
   };
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  jsonInputStructureFromFunction
+  jsonStructureFromFunction
 });

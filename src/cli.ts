@@ -4,7 +4,7 @@ import { readFile, writeFile, mkdir } from 'fs/promises';
 import { glob } from 'glob';
 import path from 'path';
 import { createGenerator } from 'ts-json-schema-generator';
-import { jsonInputStructureFromFunction, useVertexFilterFunctions } from './type-index.js';
+import { jsonStructureFromFunction, useVertexFilterFunctions } from './type-index.js';
 
 export type AiApiJSON = {
     apiName: string,
@@ -137,7 +137,7 @@ program
 program
     .command("test")
     .action(async () => {
-       const params = await jsonInputStructureFromFunction(useVertexFilterFunctions)
+       const params = await jsonStructureFromFunction(useVertexFilterFunctions)
        console.log(JSON.stringify(params))
     })
 program.parse()

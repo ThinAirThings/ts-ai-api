@@ -1,7 +1,8 @@
 declare const jsonInputStructureFromFunction: (fn: Function) => Promise<{
     name: string;
     description: string;
-    parameters: Record<string, any>;
+    input: Record<string, any>;
+    output: Record<string, any>;
 }>;
 
 declare enum Options {
@@ -37,7 +38,7 @@ declare const fnArrowTest: (params: {
 
 export { fnArrowTest, fnNormalTest, jsonInputStructureFromFunction, useVertexFilterFunctions };
 
-export type useVertexFilterFunctionsParams = { /** */
+export type useVertexFilterFunctions_Input = { /** */
     /**
      * Param Description 1
      */
@@ -70,7 +71,7 @@ export type useVertexFilterFunctionsParams = { /** */
              * Data Description 2
              */
             data2: number; }; }; };
-export type useVertexFilterFunctionsReturnType = { /** */
+export type useVertexFilterFunctions_Output = { /** */
     /**
      * Data Description 1
      */

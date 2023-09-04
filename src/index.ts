@@ -1,3 +1,3 @@
 
 
-export * from './src/jsonInputStructureFromFunction.js'
+export * from './src/jsonStructureFromFunction.js'

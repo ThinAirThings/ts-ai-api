@@ -1,7 +1,8 @@
-declare const jsonInputStructureFromFunction: (fn: Function) => Promise<{
+declare const jsonStructureFromFunction: (fn: Function) => Promise<{
     name: string;
     description: string;
-    parameters: Record<string, any>;
+    input: Record<string, any>;
+    output: Record<string, any>;
 }>;
 
-export { jsonInputStructureFromFunction };
+export { jsonStructureFromFunction };
