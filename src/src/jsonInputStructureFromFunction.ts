@@ -3,7 +3,6 @@ import path from "path";
 import { createGenerator, ts } from 'ts-json-schema-generator';
 
 
-
 // Note: This is currently slow. But it works.
 // You need to add in the ability to use parameter descriptions
 export const jsonInputStructureFromFunction = async (fn: Function): Promise<{
@@ -69,8 +68,9 @@ export const jsonInputStructureFromFunction = async (fn: Function): Promise<{
     const schema = createGenerator({
         path: path.resolve(process.cwd(), 'bin', 'type-index.d.ts'),
         // tsconfig: path.resolve(__dirname, '../tsconfig.json'),
-        type: `${fn.name}Params`,
-    }).createSchema(`${fn.name}Params`)
+        type: `${fn.name}*`,
+    }).createSchema(`${fn.name}*`)
+    console.log(JSON.stringify(schema, null, 4))
     return {
         name: fn.name,
         description: description as string,

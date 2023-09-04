@@ -87,8 +87,9 @@ ${matchNode.getJsDocs()[0]?.getComment()}`
   const schema = (0, import_ts_json_schema_generator.createGenerator)({
     path: import_path.default.resolve(process.cwd(), "bin", "type-index.d.ts"),
     // tsconfig: path.resolve(__dirname, '../tsconfig.json'),
-    type: `${fn.name}Params`
-  }).createSchema(`${fn.name}Params`);
+    type: `${fn.name}*`
+  }).createSchema(`${fn.name}*`);
+  console.log(JSON.stringify(schema, null, 4));
   return {
     name: fn.name,
     description,
