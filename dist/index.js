@@ -57,7 +57,7 @@ ${matchNode.getJsDocs()[0]?.getComment()}`
   await sourceFile.save();
   const inputSchema = createGenerator({
     path: path2.resolve(process.cwd(), "bin", "type-index.d.ts"),
-    tsconfig: path2.resolve(__dirname, "../tsconfig.json"),
+    // tsconfig: path.resolve(__dirname, '../tsconfig.json'),
     type: `${fn.name}_Input`
   }).createSchema(`${fn.name}_Input`);
   const outputSchema = createGenerator({
