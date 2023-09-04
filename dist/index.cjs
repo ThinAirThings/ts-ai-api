@@ -40,7 +40,7 @@ var import_path = __toESM(require("path"), 1);
 var import_ts_json_schema_generator = require("ts-json-schema-generator");
 var jsonInputStructureFromFunction = async (fn) => {
   const project = new import_ts_morph.Project();
-  const sourceFile = project.addSourceFileAtPath(import_path.default.resolve(process.cwd(), "./bin/type-index.d.ts"));
+  const sourceFile = project.addSourceFileAtPath(import_path.default.resolve(process.cwd(), "bin", "type-index.d.ts"));
   const variableDeclarationNode = sourceFile.getVariableDeclarationOrThrow(fn.name);
   const variableStatementNode = variableDeclarationNode.getParentOrThrow().getParentOrThrow();
   const description = variableStatementNode.getJsDocs()[0]?.getComment() ?? `${fn.name}`;
@@ -85,8 +85,8 @@ ${matchNode.getJsDocs()[0]?.getComment()}`
   });
   await sourceFile.save();
   const schema = (0, import_ts_json_schema_generator.createGenerator)({
-    path: import_path.default.resolve(__dirname, "./type-index.d.ts"),
-    tsconfig: import_path.default.resolve(__dirname, "../tsconfig.json"),
+    path: import_path.default.resolve(process.cwd(), "bin", "type-index.d.ts"),
+    // tsconfig: path.resolve(__dirname, '../tsconfig.json'),
     type: `${fn.name}Params`
   }).createSchema(`${fn.name}Params`);
   return {

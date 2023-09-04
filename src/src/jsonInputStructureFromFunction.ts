@@ -12,7 +12,7 @@ export const jsonInputStructureFromFunction = async (fn: Function): Promise<{
     parameters: Record<string, any>
 }> => {
     const project = new Project()
-    const sourceFile = project.addSourceFileAtPath(path.resolve(process.cwd(), './bin/type-index.d.ts'))
+    const sourceFile = project.addSourceFileAtPath(path.resolve(process.cwd(), 'bin', 'type-index.d.ts'))
     // Get Target Variable
     const variableDeclarationNode = sourceFile
         .getVariableDeclarationOrThrow(fn.name)
@@ -67,8 +67,8 @@ export const jsonInputStructureFromFunction = async (fn: Function): Promise<{
     })
     await sourceFile.save()
     const schema = createGenerator({
-        path: path.resolve(__dirname, './type-index.d.ts'),
-        tsconfig: path.resolve(__dirname, '../tsconfig.json'),
+        path: path.resolve(process.cwd(), 'bin', 'type-index.d.ts'),
+        // tsconfig: path.resolve(__dirname, '../tsconfig.json'),
         type: `${fn.name}Params`,
     }).createSchema(`${fn.name}Params`)
     return {
