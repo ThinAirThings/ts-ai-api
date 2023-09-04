@@ -40,7 +40,7 @@ var import_path = __toESM(require("path"), 1);
 var import_ts_json_schema_generator = require("ts-json-schema-generator");
 var jsonInputStructureFromFunction = async (fn) => {
   const project = new import_ts_morph.Project();
-  const sourceFile = project.addSourceFileAtPath(import_path.default.resolve(process.cwd(), "./type-index.d.ts"));
+  const sourceFile = project.addSourceFileAtPath(import_path.default.resolve(process.cwd(), "./bin/type-index.d.ts"));
   const variableDeclarationNode = sourceFile.getVariableDeclarationOrThrow(fn.name);
   const variableStatementNode = variableDeclarationNode.getParentOrThrow().getParentOrThrow();
   const description = variableStatementNode.getJsDocs()[0]?.getComment() ?? `${fn.name}`;

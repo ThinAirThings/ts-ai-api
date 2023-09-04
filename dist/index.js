@@ -11,7 +11,7 @@ import path2 from "path";
 import { createGenerator } from "ts-json-schema-generator";
 var jsonInputStructureFromFunction = async (fn) => {
   const project = new Project();
-  const sourceFile = project.addSourceFileAtPath(path2.resolve(process.cwd(), "./type-index.d.ts"));
+  const sourceFile = project.addSourceFileAtPath(path2.resolve(process.cwd(), "./bin/type-index.d.ts"));
   const variableDeclarationNode = sourceFile.getVariableDeclarationOrThrow(fn.name);
   const variableStatementNode = variableDeclarationNode.getParentOrThrow().getParentOrThrow();
   const description = variableStatementNode.getJsDocs()[0]?.getComment() ?? `${fn.name}`;

@@ -12,7 +12,7 @@ export const jsonInputStructureFromFunction = async (fn: Function): Promise<{
     parameters: Record<string, any>
 }> => {
     const project = new Project()
-    const sourceFile = project.addSourceFileAtPath(path.resolve(process.cwd(), './type-index.d.ts'))
+    const sourceFile = project.addSourceFileAtPath(path.resolve(process.cwd(), './bin/type-index.d.ts'))
     // Get Target Variable
     const variableDeclarationNode = sourceFile
         .getVariableDeclarationOrThrow(fn.name)
