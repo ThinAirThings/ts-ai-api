@@ -28,7 +28,7 @@ export const jsonStructureFromFunction = async (fn: Function): Promise<{
 
     // Return Type
     const returnType = functionTypeNode.getReturnType()
-    if (sourceFile.getVariableDeclaration(`${fn.name}_Input`) === undefined) {
+    if (sourceFile.getTypeAlias(`${fn.name}_Input`) === undefined) {
         sourceFile.addTypeAliases([{
             name: `${fn.name}_Input`,
             type: inputObject.getType().getText()!,

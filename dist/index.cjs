@@ -47,7 +47,7 @@ var jsonStructureFromFunction = async (fn) => {
   const functionTypeNode = variableDeclarationNode.getTypeNodeOrThrow();
   const inputObject = functionTypeNode.getParameters()[0];
   const returnType = functionTypeNode.getReturnType();
-  if (sourceFile.getVariableDeclaration(`${fn.name}_Input`) === void 0) {
+  if (sourceFile.getTypeAlias(`${fn.name}_Input`) === void 0) {
     sourceFile.addTypeAliases([{
       name: `${fn.name}_Input`,
       type: inputObject.getType().getText(),
