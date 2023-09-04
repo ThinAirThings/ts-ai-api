@@ -13,6 +13,7 @@ export const jsonStructureFromFunction = async (fn: Function): Promise<{
 }> => {
     const project = new Project()
     const sourceFile = project.addSourceFileAtPath(path.resolve(process.cwd(), 'bin', 'type-index.d.ts'))
+    
     // Get Target Variable
     const variableDeclarationNode = sourceFile
         .getVariableDeclarationOrThrow(fn.name)
@@ -27,45 +28,48 @@ export const jsonStructureFromFunction = async (fn: Function): Promise<{
 
     // Return Type
     const returnType = functionTypeNode.getReturnType()
-    sourceFile.addTypeAliases([{
-        name: `${fn.name}_Input`,
-        type: inputObject.getType().getText()!,
-        isExported: true
-    }, {
-        name: `${fn.name}_Output`,
-        type: returnType.getText()!,
-        isExported: true
-    }]).forEach((typeAlias) => {
-        const nodeMatchVisitor = (aliasNode: Node<ts.Node>, matchNode: Node<ts.Node>) => {
-            if (aliasNode.getKindName()==="PropertySignature" && aliasNode.getText().includes(matchNode.getText())) {
-                // @ts-ignore
-                aliasNode.addJsDoc({
-                    description: ``
-                })
-                // @ts-ignore
-                aliasNode.addJsDoc({
-                    //@ts-ignore
-                    description: `\n${matchNode.getJsDocs()[0]?.getComment()}`
+    if (sourceFile.getVariableDeclaration(`${fn.name}_Input`) !== undefined) {
+        sourceFile.addTypeAliases([{
+            name: `${fn.name}_Input`,
+            type: inputObject.getType().getText()!,
+            isExported: true
+        }, {
+            name: `${fn.name}_Output`,
+            type: returnType.getText()!,
+            isExported: true
+        }]).forEach((typeAlias) => {
+            const nodeMatchVisitor = (aliasNode: Node<ts.Node>, matchNode: Node<ts.Node>) => {
+                if (aliasNode.getKindName()==="PropertySignature" && aliasNode.getText().includes(matchNode.getText())) {
+                    // @ts-ignore
+                    aliasNode.addJsDoc({
+                        description: ``
+                    })
+                    // @ts-ignore
+                    aliasNode.addJsDoc({
+                        //@ts-ignore
+                        description: `\n${matchNode.getJsDocs()[0]?.getComment()}`
+                    })
+                }
+                aliasNode.forEachChild(aliasNodeChild => {
+                    nodeMatchVisitor(aliasNodeChild, matchNode)
                 })
             }
-            aliasNode.forEachChild(aliasNodeChild => {
-                nodeMatchVisitor(aliasNodeChild, matchNode)
+            const visitor = (node: Node<ts.Node>)  => {
+                //@ts-ignore
+                if (node.getKindName() === "PropertySignature" && (node.getJsDocs()[0]?.getComment())) {
+                    typeAlias.forEachChild((aliasNode) => {
+                        nodeMatchVisitor(aliasNode, node)
+                    })
+                }
+                node.forEachChild(visitor)
+            }
+            inputObject.forEachChild((node) => {
+                visitor(node)
             })
-        }
-        const visitor = (node: Node<ts.Node>)  => {
-            //@ts-ignore
-            if (node.getKindName() === "PropertySignature" && (node.getJsDocs()[0]?.getComment())) {
-                typeAlias.forEachChild((aliasNode) => {
-                    nodeMatchVisitor(aliasNode, node)
-                })
-            }
-            node.forEachChild(visitor)
-        }
-        inputObject.forEachChild((node) => {
-            visitor(node)
         })
-    })
-    await sourceFile.save()
+        await sourceFile.save()
+    }
+    
     // Create Input Schema
     const inputSchema = createGenerator({
         path: path.resolve(process.cwd(), 'bin', 'type-index.d.ts'),

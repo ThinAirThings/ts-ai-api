@@ -47,43 +47,45 @@ var jsonStructureFromFunction = async (fn) => {
   const functionTypeNode = variableDeclarationNode.getTypeNodeOrThrow();
   const inputObject = functionTypeNode.getParameters()[0];
   const returnType = functionTypeNode.getReturnType();
-  sourceFile.addTypeAliases([{
-    name: `${fn.name}_Input`,
-    type: inputObject.getType().getText(),
-    isExported: true
-  }, {
-    name: `${fn.name}_Output`,
-    type: returnType.getText(),
-    isExported: true
-  }]).forEach((typeAlias) => {
-    const nodeMatchVisitor = (aliasNode, matchNode) => {
-      if (aliasNode.getKindName() === "PropertySignature" && aliasNode.getText().includes(matchNode.getText())) {
-        aliasNode.addJsDoc({
-          description: ``
-        });
-        aliasNode.addJsDoc({
-          //@ts-ignore
-          description: `
+  if (sourceFile.getVariableDeclaration(`${fn.name}_Input`) !== void 0) {
+    sourceFile.addTypeAliases([{
+      name: `${fn.name}_Input`,
+      type: inputObject.getType().getText(),
+      isExported: true
+    }, {
+      name: `${fn.name}_Output`,
+      type: returnType.getText(),
+      isExported: true
+    }]).forEach((typeAlias) => {
+      const nodeMatchVisitor = (aliasNode, matchNode) => {
+        if (aliasNode.getKindName() === "PropertySignature" && aliasNode.getText().includes(matchNode.getText())) {
+          aliasNode.addJsDoc({
+            description: ``
+          });
+          aliasNode.addJsDoc({
+            //@ts-ignore
+            description: `
 ${matchNode.getJsDocs()[0]?.getComment()}`
+          });
+        }
+        aliasNode.forEachChild((aliasNodeChild) => {
+          nodeMatchVisitor(aliasNodeChild, matchNode);
         });
-      }
-      aliasNode.forEachChild((aliasNodeChild) => {
-        nodeMatchVisitor(aliasNodeChild, matchNode);
+      };
+      const visitor = (node) => {
+        if (node.getKindName() === "PropertySignature" && node.getJsDocs()[0]?.getComment()) {
+          typeAlias.forEachChild((aliasNode) => {
+            nodeMatchVisitor(aliasNode, node);
+          });
+        }
+        node.forEachChild(visitor);
+      };
+      inputObject.forEachChild((node) => {
+        visitor(node);
       });
-    };
-    const visitor = (node) => {
-      if (node.getKindName() === "PropertySignature" && node.getJsDocs()[0]?.getComment()) {
-        typeAlias.forEachChild((aliasNode) => {
-          nodeMatchVisitor(aliasNode, node);
-        });
-      }
-      node.forEachChild(visitor);
-    };
-    inputObject.forEachChild((node) => {
-      visitor(node);
     });
-  });
-  await sourceFile.save();
+    await sourceFile.save();
+  }
   const inputSchema = (0, import_ts_json_schema_generator.createGenerator)({
     path: import_path.default.resolve(process.cwd(), "bin", "type-index.d.ts"),
     // tsconfig: path.resolve(__dirname, '../tsconfig.json'),
