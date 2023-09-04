@@ -75,7 +75,7 @@ export const jsonStructureFromFunction = async (fn: Function): Promise<{
     // Create Output Schema
     const outputSchema = createGenerator({
         path: path.resolve(process.cwd(), 'bin', 'type-index.d.ts'),
-        tsconfig: path.resolve(__dirname, '../tsconfig.json'),
+        // tsconfig: path.resolve(__dirname, '../tsconfig.json'),
         type: `${fn.name}_Output`,
     }).createSchema(`${fn.name}_Output`)
     return {
