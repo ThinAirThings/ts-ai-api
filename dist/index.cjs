@@ -30,6 +30,7 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/index.ts
 var src_exports = {};
 __export(src_exports, {
+  jsonStructureFromAirNode: () => jsonStructureFromAirNode,
   jsonStructureFromFunction: () => jsonStructureFromFunction
 });
 module.exports = __toCommonJS(src_exports);
@@ -88,12 +89,12 @@ ${matchNode.getJsDocs()[0]?.getComment()}`
   }
   const inputSchema = (0, import_ts_json_schema_generator.createGenerator)({
     path: import_path.default.resolve(process.cwd(), "bin", "type-index.d.ts"),
-    // tsconfig: path.resolve(__dirname, '../tsconfig.json'),
+    tsconfig: import_path.default.resolve(__dirname, "../tsconfig.json"),
     type: `${fn.name}_Input`
   }).createSchema(`${fn.name}_Input`);
   const outputSchema = (0, import_ts_json_schema_generator.createGenerator)({
     path: import_path.default.resolve(process.cwd(), "bin", "type-index.d.ts"),
-    // tsconfig: path.resolve(__dirname, '../tsconfig.json'),
+    tsconfig: import_path.default.resolve(__dirname, "../tsconfig.json"),
     type: `${fn.name}_Output`
   }).createSchema(`${fn.name}_Output`);
   return {
@@ -103,7 +104,43 @@ ${matchNode.getJsDocs()[0]?.getComment()}`
     output: outputSchema.definitions[`${fn.name}_Output`]
   };
 };
+
+// src/src/jsonStructureFromAirNode.ts
+var import_path2 = __toESM(require("path"), 1);
+var import_ts_json_schema_generator2 = require("ts-json-schema-generator");
+var jsonStructureFromAirNode = async (nodeName) => {
+  const nodeSchema = (0, import_ts_json_schema_generator2.createGenerator)({
+    path: import_path2.default.resolve(process.cwd(), "bin", "type-index.d.ts"),
+    // tsconfig: path.resolve(__dirname, '../tsconfig.json'),
+    type: nodeName,
+    expose: "all"
+  }).createSchema(nodeName);
+  const findValueNode = (node) => {
+    if (typeof node !== "object" || node === null) {
+      return void 0;
+    }
+    if (Object.keys(node).includes("value")) {
+      return node.value;
+    } else {
+      for (const childNode of Object.values(node)) {
+        const result = findValueNode(childNode);
+        if (result !== void 0) {
+          return result;
+        }
+      }
+    }
+    return void 0;
+  };
+  const nodeDescription = nodeSchema.definitions["TestNode"].description;
+  const valueSchema = findValueNode(nodeSchema.definitions);
+  return {
+    name: nodeName,
+    description: nodeDescription,
+    structure: valueSchema
+  };
+};
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  jsonStructureFromAirNode,
   jsonStructureFromFunction
 });

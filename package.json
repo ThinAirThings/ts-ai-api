@@ -21,7 +21,7 @@
         "typescript-json-schema": "^0.60.0"
     },
     "devDependencies": {
-        "@thinairthings/react-nodegraph": "^1.0.19",
+        "@thinairthings/react-nodegraph": "^1.0.46",
         "@types/glob": "^8.1.0",
         "@types/react": "^18.0.32",
         "esbuild": "^0.19.2",

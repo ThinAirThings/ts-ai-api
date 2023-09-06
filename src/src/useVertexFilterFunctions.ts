@@ -1,4 +1,4 @@
-import { Edge, useVertex } from "@thinairthings/react-nodegraph"
+import { useEdge } from "@thinairthings/react-nodegraph"
 
 enum Options {
     Option1 = 'Option1',
@@ -23,7 +23,7 @@ export const useVertexFilterFunctions = (params: {
     data1: string
     data2: number
 } => {
-    const [filteredFunctionsEdge] = useVertex(async ([]) => {
+    const [filteredFunctionsEdge] = useEdge(async ([]) => {
         return {
             filteredFunctions: 5
         }

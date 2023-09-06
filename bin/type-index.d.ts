@@ -1,4 +1,7 @@
-declare const jsonInputStructureFromFunction: (fn: Function) => Promise<{
+import { AirNode, NodeValue } from '@thinairthings/react-nodegraph';
+export * from '@thinairthings/react-nodegraph';
+
+declare const jsonStructureFromFunction: (fn: Function) => Promise<{
     name: string;
     description: string;
     input: Record<string, any>;
@@ -36,47 +39,23 @@ declare const fnArrowTest: (params: {
     thing2: number;
 }) => number;
 
-export { fnArrowTest, fnNormalTest, jsonInputStructureFromFunction, useVertexFilterFunctions };
+/** This is a test node */
+type TestNode = AirNode<{
+    /** This is a name */
+    name: string;
+    /** This is a shape */
+    shape: {
+        [key: string]: any;
+    };
+    thing: number;
+}, 'someNode'>;
+declare const testFn2: ({ input }: {
+    input: NodeValue<TestNode>;
+}) => void;
+declare const jsonStructureFromAirNode: (nodeName: string) => Promise<{
+    name: string;
+    description: any;
+    structure: any;
+}>;
 
-export type useVertexFilterFunctions_Input = { /** */
-    /**
-     * Param Description 1
-     */
-    /** */
-    /**
-     * Data Description 1
-     */
-    /** */
-    /**
-     * Data Description 2
-     */
-    rawInput: { /** */
-        /**
-         * Param Description 1
-         */
-        thing1: Options; /** */
-        /**
-         * Data Description 1
-         */
-        /** */
-        /**
-         * Data Description 2
-         */
-        thing2: { /** */
-            /**
-             * Data Description 1
-             */
-            data1: string; /** */
-            /**
-             * Data Description 2
-             */
-            data2: number; }; }; };
-export type useVertexFilterFunctions_Output = { /** */
-    /**
-     * Data Description 1
-     */
-    data1: string; /** */
-    /**
-     * Data Description 2
-     */
-    data2: number; };
+export { TestNode, fnArrowTest, fnNormalTest, jsonStructureFromAirNode, jsonStructureFromFunction, testFn2, useVertexFilterFunctions };
