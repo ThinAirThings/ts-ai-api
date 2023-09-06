@@ -11,9 +11,13 @@ export type TestNode = AirNode<{
     thing: number
 }, 'someNode'>
 
-export const jsonStructureFromAirNode = async (
+export const jsonStructureFromAirNode = (
     nodeName: string
-) => {
+): {
+    name: string,
+    description: string,
+    structure: Record<string, any>
+} => {
     const nodeSchema = createGenerator({
         path: path.resolve(process.cwd(), 'bin', 'type-index.d.ts'),
         // tsconfig: path.resolve(__dirname, '../tsconfig.json'),

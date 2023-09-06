@@ -78,7 +78,7 @@ ${matchNode.getJsDocs()[0]?.getComment()}`
 // src/src/jsonStructureFromAirNode.ts
 import path3 from "path";
 import { createGenerator as createGenerator2 } from "ts-json-schema-generator";
-var jsonStructureFromAirNode = async (nodeName) => {
+var jsonStructureFromAirNode = (nodeName) => {
   const nodeSchema = createGenerator2({
     path: path3.resolve(process.cwd(), "bin", "type-index.d.ts"),
     // tsconfig: path.resolve(__dirname, '../tsconfig.json'),

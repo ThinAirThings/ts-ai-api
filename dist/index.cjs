@@ -108,7 +108,7 @@ ${matchNode.getJsDocs()[0]?.getComment()}`
 // src/src/jsonStructureFromAirNode.ts
 var import_path2 = __toESM(require("path"), 1);
 var import_ts_json_schema_generator2 = require("ts-json-schema-generator");
-var jsonStructureFromAirNode = async (nodeName) => {
+var jsonStructureFromAirNode = (nodeName) => {
   const nodeSchema = (0, import_ts_json_schema_generator2.createGenerator)({
     path: import_path2.default.resolve(process.cwd(), "bin", "type-index.d.ts"),
     // tsconfig: path.resolve(__dirname, '../tsconfig.json'),

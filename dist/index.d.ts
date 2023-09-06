@@ -17,10 +17,10 @@ type TestNode = AirNode<{
     };
     thing: number;
 }, 'someNode'>;
-declare const jsonStructureFromAirNode: (nodeName: string) => Promise<{
+declare const jsonStructureFromAirNode: (nodeName: string) => {
     name: string;
-    description: any;
-    structure: any;
-}>;
+    description: string;
+    structure: Record<string, any>;
+};
 
 export { TestNode, jsonStructureFromAirNode, jsonStructureFromFunction };
