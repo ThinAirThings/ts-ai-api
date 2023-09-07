@@ -44,7 +44,7 @@ export const jsonStructureFromNodeIndex = (
     }
 } => {
     const indexSchema = schemaFromTypeName(indexName)
-    // console.log(JSON.stringify(indexSchema, null, 4))
+    console.log(JSON.stringify(indexSchema, null, 4))
     const definitions = indexSchema.definitions as {
         [indexKey: typeof indexName]: {
             description: string

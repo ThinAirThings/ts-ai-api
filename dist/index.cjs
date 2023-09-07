@@ -147,6 +147,7 @@ var jsonStructureFromAirNode = (nodeName) => {
 // src/src/jsonStructureFromNodeIndex.ts
 var jsonStructureFromNodeIndex = (indexName) => {
   const indexSchema = schemaFromTypeName(indexName);
+  console.log(JSON.stringify(indexSchema, null, 4));
   const definitions = indexSchema.definitions;
   const index = Object.fromEntries(
     Object.entries(definitions).filter(([key]) => {
