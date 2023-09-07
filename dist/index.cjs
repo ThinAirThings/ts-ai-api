@@ -119,7 +119,6 @@ var schemaFromTypeName = (typeName) => (0, import_ts_json_schema_generator2.crea
 // src/src/jsonStructureFromAirNode.ts
 var jsonStructureFromAirNode = (nodeName) => {
   const nodeSchema = schemaFromTypeName(nodeName);
-  console.log(JSON.stringify(nodeSchema, null, 4));
   const findValueNode = (node) => {
     if (typeof node !== "object" || node === null) {
       return void 0;

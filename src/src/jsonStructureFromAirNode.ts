@@ -22,7 +22,6 @@ export const jsonStructureFromAirNode = (
     structure: Record<string, any>
 } => {
     const nodeSchema = schemaFromTypeName(nodeName)
-    console.log(JSON.stringify(nodeSchema, null, 4))
     const findValueNode = (node: Record<string, any>): any => {
         if (typeof node !== 'object' || node === null) {
             return undefined;
