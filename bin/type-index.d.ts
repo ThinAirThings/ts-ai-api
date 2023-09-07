@@ -1,4 +1,4 @@
-import { AirNode, NodeValue } from '@thinairthings/react-nodegraph';
+import { AirNode, NodeValue, NodeTypeString } from '@thinairthings/react-nodegraph';
 export * from '@thinairthings/react-nodegraph';
 
 declare const jsonStructureFromFunction: (fn: Function) => Promise<{
@@ -48,14 +48,66 @@ type TestNode = AirNode<{
         [key: string]: any;
     };
     thing: number;
-}, 'someNode'>;
-declare const testFn2: ({ input }: {
-    input: NodeValue<TestNode>;
-}) => void;
-declare const jsonStructureFromAirNode: (nodeName: string) => Promise<{
+}, 'SomeNode'>;
+declare const jsonStructureFromAirNode: (nodeName: `${Capitalize<string>}Node`) => {
     name: string;
-    description: any;
-    structure: any;
-}>;
+    description: string;
+    structure: Record<string, any>;
+};
 
-export { TestNode, fnArrowTest, fnNormalTest, jsonStructureFromAirNode, jsonStructureFromFunction, testFn2, useVertexFilterFunctions };
+/** The goal of creating a simple line chart to visualize data. */
+type SimpleLineChartGoalNode = AirNode<{
+    /** Reasoning as to why this goal was chosen. */
+    reasoning: string;
+}, 'SimpleLineChartGoalNode'>;
+/** The goal of creating a pie chart to visualize data. */
+type PieChartGoalNode = AirNode<{
+    /** Reasoning as to why this goal was chosen. */
+    reasoning: string;
+    pickles: number;
+}, 'PieChartGoalNode'>;
+/** The set of possible goals. */
+type GoalNodeIndex = {
+    /** The goal of creating a simple line chart to visualize data. */
+    'SimpleLineChartGoalNode': NodeValue<SimpleLineChartGoalNode>;
+    /** The goal of creating a pie chart to visualize data. */
+    'PieChartGoalNode': NodeValue<PieChartGoalNode>;
+};
+declare const jsonStructureFromNodeIndex: (indexName: `${Capitalize<string>}NodeIndex`) => {
+    name: string;
+    description: string;
+    index: {
+        [nodeKey: `${Capitalize<string>}Node`]: {
+            name: NodeTypeString;
+            description: string;
+            structure: Record<string, any>;
+        };
+        [nodeKey: `${Capitalize<string>}${Capitalize<string>}Node`]: {
+            name: NodeTypeString;
+            description: string;
+            structure: Record<string, any>;
+        };
+        [nodeKey: `${Capitalize<string>}${Capitalize<string>}${Capitalize<string>}Node`]: {
+            name: NodeTypeString;
+            description: string;
+            structure: Record<string, any>;
+        };
+        [nodeKey: `${Capitalize<string>}${Capitalize<string>}${Capitalize<string>}${Capitalize<string>}Node`]: {
+            name: NodeTypeString;
+            description: string;
+            structure: Record<string, any>;
+        };
+        [nodeKey: `${Capitalize<string>}${Capitalize<string>}${Capitalize<string>}${Capitalize<string>}${Capitalize<string>}Node`]: {
+            name: NodeTypeString;
+            description: string;
+            structure: Record<string, any>;
+        };
+        [nodeKey: `${Capitalize<string>}${Capitalize<string>}${Capitalize<string>}${Capitalize<string>}${Capitalize<string>}${Capitalize<string>}Node`]: {
+            name: NodeTypeString;
+            description: string;
+            structure: Record<string, any>;
+        };
+    };
+};
+
+export { GoalNodeIndex, PieChartGoalNode, SimpleLineChartGoalNode, TestNode, fnArrowTest, fnNormalTest, jsonStructureFromAirNode, jsonStructureFromFunction, jsonStructureFromNodeIndex, useVertexFilterFunctions };

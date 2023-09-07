@@ -1,6 +1,5 @@
-import { AirNode, NodeValue } from "@thinairthings/react-nodegraph"
-import path from "path"
-import { createGenerator } from "ts-json-schema-generator"
+import { AirNode } from "@thinairthings/react-nodegraph"
+import { schemaFromTypeName } from "./schemaFromTypeName.js"
 
 /** This is a test node */
 export type TestNode = AirNode<{
@@ -9,21 +8,18 @@ export type TestNode = AirNode<{
     /** This is a shape */
     shape: {[key: string]: any}
     thing: number
-}, 'someNode'>
+}, 'SomeNode'>
+
 
 export const jsonStructureFromAirNode = (
-    nodeName: string
+    nodeName: `${Capitalize<string>}Node`
 ): {
     name: string,
     description: string,
     structure: Record<string, any>
 } => {
-    const nodeSchema = createGenerator({
-        path: path.resolve(process.cwd(), 'bin', 'type-index.d.ts'),
-        // tsconfig: path.resolve(__dirname, '../tsconfig.json'),
-        type: nodeName,
-        expose: 'all',
-    }).createSchema(nodeName)
+    const nodeSchema = schemaFromTypeName(nodeName)
+    console.log(JSON.stringify(nodeSchema, null, 4))
     const findValueNode = (node: Record<string, any>): any => {
         if (typeof node !== 'object' || node === null) {
             return undefined;
@@ -41,7 +37,7 @@ export const jsonStructureFromAirNode = (
         }
         return undefined;
     }
-    const nodeDescription = (nodeSchema.definitions!['TestNode']! as any).description
+    const nodeDescription = (nodeSchema.definitions![nodeName]! as any).description
     const valueSchema = findValueNode(nodeSchema.definitions!)
     return {
         name: nodeName,

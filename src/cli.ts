@@ -5,6 +5,7 @@ import { glob } from 'glob';
 import path from 'path';
 import { createGenerator } from 'ts-json-schema-generator';
 import { jsonStructureFromAirNode } from './src/jsonStructureFromAirNode.js';
+import { jsonStructureFromNodeIndex } from './src/jsonStructureFromNodeIndex.js';
 
 export type AiApiJSON = {
     apiName: string,
@@ -138,7 +139,8 @@ program
     .command("test")
     .action(async () => {
     //    const params = await jsonStructureFromFunction(testFn2)
-        const params = await jsonStructureFromAirNode('TestNode')
+        // const params = await jsonStructureFromAirNode('TestNode')
+        const params = jsonStructureFromNodeIndex('GoalNodeIndex')
        console.log(JSON.stringify(params, null, 4))
     })
 program.parse()
