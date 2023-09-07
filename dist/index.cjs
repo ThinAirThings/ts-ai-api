@@ -111,7 +111,7 @@ var import_path2 = __toESM(require("path"), 1);
 var import_ts_json_schema_generator2 = require("ts-json-schema-generator");
 var schemaFromTypeName = (typeName) => (0, import_ts_json_schema_generator2.createGenerator)({
   path: import_path2.default.resolve(process.cwd(), "bin", "type-index.d.ts"),
-  tsconfig: import_path2.default.resolve(process.cwd(), "dist", "tsconfig.json"),
+  tsconfig: process.env.NODE_ENV === "cli-dev" ? import_path2.default.resolve(process.cwd(), "dist", "tsconfig.json") : import_path2.default.resolve(__dirname, "tsconfig.json"),
   type: typeName,
   expose: "all"
 }).createSchema(typeName);

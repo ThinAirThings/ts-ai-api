@@ -35,7 +35,7 @@
     "scripts": {
         "bin": "ts-ai-types",
         "build": "tsup-node",
-        "dev": "tsup-node --config tsup.dev.config.ts && node ./bin/cli.js",
+        "dev": "tsup-node --config tsup.dev.config.ts && NODE_ENV=cli-dev node ./bin/cli.js",
         "npmpub": "npm run build && git add . && git commit -m \"mod\" && git push && npm version patch && npm publish"
     },
     "files": [

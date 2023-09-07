@@ -80,7 +80,7 @@ import path3 from "path";
 import { createGenerator as createGenerator2 } from "ts-json-schema-generator";
 var schemaFromTypeName = (typeName) => createGenerator2({
   path: path3.resolve(process.cwd(), "bin", "type-index.d.ts"),
-  tsconfig: path3.resolve(process.cwd(), "dist", "tsconfig.json"),
+  tsconfig: process.env.NODE_ENV === "cli-dev" ? path3.resolve(process.cwd(), "dist", "tsconfig.json") : path3.resolve(__dirname, "tsconfig.json"),
   type: typeName,
   expose: "all"
 }).createSchema(typeName);

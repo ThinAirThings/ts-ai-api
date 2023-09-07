@@ -7,22 +7,6 @@ declare const jsonStructureFromFunction: (fn: Function) => Promise<{
     output: Record<string, any>;
 }>;
 
-/** This is a test node */
-type TestNode = AirNode<{
-    /** This is a name */
-    name: string;
-    /** This is a shape */
-    shape: {
-        [key: string]: any;
-    };
-    thing: number;
-}, 'SomeNode'>;
-declare const jsonStructureFromAirNode: (nodeName: `${Capitalize<string>}Node`) => {
-    name: string;
-    description: string;
-    structure: Record<string, any>;
-};
-
 /** The goal of creating a simple line chart to visualize data. */
 type SimpleLineChartGoalNode = AirNode<{
     /** Reasoning as to why this goal was chosen. */
@@ -78,4 +62,20 @@ declare const jsonStructureFromNodeIndex: (indexName: `${Capitalize<string>}Node
     };
 };
 
-export { GoalNodeIndex, PieChartGoalNode, SimpleLineChartGoalNode, TestNode, jsonStructureFromAirNode, jsonStructureFromFunction, jsonStructureFromNodeIndex };
+/** The input to the system which will take an array of goals and begin trying to achieve them. */
+type ResolutionOutputNode = AirNode<{
+    /** An array of goals */
+    goals: Array<{
+        /** The name of the goal. */
+        goal: keyof GoalNodeIndex;
+        /** The reasoning behind choosing this goal. */
+        reasoning: string;
+    }>;
+}, 'ResolutionOutputNode'>;
+declare const jsonStructureFromAirNode: (nodeName: `${Capitalize<string>}Node`) => {
+    name: string;
+    description: string;
+    structure: Record<string, any>;
+};
+
+export { GoalNodeIndex, PieChartGoalNode, ResolutionOutputNode, SimpleLineChartGoalNode, jsonStructureFromAirNode, jsonStructureFromFunction, jsonStructureFromNodeIndex };

@@ -1,14 +1,17 @@
 import { AirNode } from "@thinairthings/react-nodegraph"
 import { schemaFromTypeName } from "./schemaFromTypeName.js"
+import { GoalNodeIndex } from "./jsonStructureFromNodeIndex.js"
 
-/** This is a test node */
-export type TestNode = AirNode<{
-    /** This is a name */
-    name: string,
-    /** This is a shape */
-    shape: {[key: string]: any}
-    thing: number
-}, 'SomeNode'>
+/** The input to the system which will take an array of goals and begin trying to achieve them. */
+export type ResolutionOutputNode = AirNode<{
+    /** An array of goals */
+    goals: Array<{
+        /** The name of the goal. */
+        goal: keyof GoalNodeIndex,
+        /** The reasoning behind choosing this goal. */
+        reasoning: string
+    }>
+}, 'ResolutionOutputNode'>
 
 
 export const jsonStructureFromAirNode = (
