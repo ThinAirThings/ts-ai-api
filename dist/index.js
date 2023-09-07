@@ -128,7 +128,7 @@ var jsonStructureFromNodeIndex = (indexName) => {
         {
           name: match,
           description: definitions[indexName].properties[match]?.description ?? "",
-          structure: value.properties
+          structure: value
         }
       ];
     })

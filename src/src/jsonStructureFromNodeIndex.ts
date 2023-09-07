@@ -69,7 +69,7 @@ export const jsonStructureFromNodeIndex = (
                 {
                     name: match as NodeTypeString,
                     description: definitions[indexName].properties[match as any]?.description??'',
-                    structure: value.properties
+                    structure: value
                 }
             ]
         })

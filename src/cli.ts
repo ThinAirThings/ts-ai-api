@@ -139,8 +139,8 @@ program
     .command("test")
     .action(async () => {
     //    const params = await jsonStructureFromFunction(testFn2)
-        const params = jsonStructureFromAirNode('ResolutionOutputNode')
-        // const params = jsonStructureFromNodeIndex('GoalNodeIndex')
+        // const params = jsonStructureFromAirNode('ResolutionOutputNode')
+        const params = jsonStructureFromNodeIndex('GoalNodeIndex')
        console.log(JSON.stringify(params, null, 4))
     })
 program.parse()

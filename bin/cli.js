@@ -24,32 +24,31 @@ var schemaFromTypeName = (typeName) => createGenerator({
   expose: "all"
 }).createSchema(typeName);
 
-// src/src/jsonStructureFromAirNode.ts
-var jsonStructureFromAirNode = (nodeName) => {
-  const nodeSchema = schemaFromTypeName(nodeName);
-  console.log(JSON.stringify(nodeSchema, null, 4));
-  const findValueNode = (node) => {
-    if (typeof node !== "object" || node === null) {
-      return void 0;
-    }
-    if (Object.keys(node).includes("value")) {
-      return node.value;
-    } else {
-      for (const childNode of Object.values(node)) {
-        const result = findValueNode(childNode);
-        if (result !== void 0) {
-          return result;
+// src/src/jsonStructureFromNodeIndex.ts
+var jsonStructureFromNodeIndex = (indexName) => {
+  const indexSchema = schemaFromTypeName(indexName);
+  console.log(JSON.stringify(indexSchema, null, 4));
+  const definitions = indexSchema.definitions;
+  const index = Object.fromEntries(
+    Object.entries(definitions).filter(([key]) => {
+      const match = key.match(/<([^>]+)>/);
+      return match && match.length > 0 ? true : false;
+    }).map(([key, value]) => {
+      const match = key.match(/<([^>]+)>/)[1];
+      return [
+        key.match(/<([^>]+)>/)[1],
+        {
+          name: match,
+          description: definitions[indexName].properties[match]?.description ?? "",
+          structure: value
         }
-      }
-    }
-    return void 0;
-  };
-  const nodeDescription = nodeSchema.definitions[nodeName].description;
-  const valueSchema = findValueNode(nodeSchema.definitions);
+      ];
+    })
+  );
   return {
-    name: nodeName,
-    description: nodeDescription,
-    structure: valueSchema
+    name: indexName,
+    description: definitions[indexName].description,
+    index
   };
 };
 
@@ -135,8 +134,7 @@ program.command("generate-interfaces").option("-d, --directory <projectDirectory
   });
 });
 program.command("test").action(async () => {
-  console.log(process.env.NODE_ENV);
-  const params = jsonStructureFromAirNode("ResolutionOutputNode");
+  const params = jsonStructureFromNodeIndex("GoalNodeIndex");
   console.log(JSON.stringify(params, null, 4));
 });
 program.parse();
